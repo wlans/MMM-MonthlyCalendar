@@ -284,7 +284,7 @@ Module.register("MMM-MonthlyCalendar", {
 
           div.appendChild(el("span", { "innerText": e.title }));
 
-          if e.multiDayEvent && (eventDate.toDateString() == e.endDate.toDateString())) {
+          if (e.multiDayEvent && (eventDate.toDateString() == e.endDate.toDateString())) {
             div.appendChild(el("span", { "className": "event-label", "innerText": this.config.multiDayEndingTimeSeparator + formatEventTime(e.endDate) }));
           }
 
