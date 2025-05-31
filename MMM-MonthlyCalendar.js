@@ -93,12 +93,21 @@ Module.register("MMM-MonthlyCalendar", {
           e.endDate = new Date(+e.endDate);
 
           if (e.fullDayEvent) {
-            e.endDate = new Date(e.endDate.getTime() - 1000);
-            if (e.startDate > e.endDate) {
-              e.startDate = new Date(e.endDate.getFullYear(), e.endDate.getMonth(), e.endDate.getDate(), 1);
-            } else {
-              e.startDate = new Date(e.startDate.getTime() + 60 * 60 * 1000);
+            // If endDate is exactly at midnight, subtract one day so it doesn't spill into the next day
+            if (
+              e.endDate.getHours() === 0 &&
+              e.endDate.getMinutes() === 0 &&
+              e.endDate.getSeconds() === 0 &&
+              e.endDate.getMilliseconds() === 0
+            ) {
+              e.endDate = new Date(
+                e.endDate.getFullYear(),
+                e.endDate.getMonth(),
+                e.endDate.getDate() - 1,
+                23, 59, 59, 999
+              );
             }
+            // Do not adjust startDate or endDate further
           }
 
           if (e.startDate.toDateString() !== e.endDate.toDateString()) {
@@ -275,7 +284,7 @@ Module.register("MMM-MonthlyCalendar", {
 
           div.appendChild(el("span", { "innerText": e.title }));
 
-          if (e.multiDayEvent && (eventDate.toDateString() == e.endDate.toDateString())) {
+          if e.multiDayEvent && (eventDate.toDateString() == e.endDate.toDateString())) {
             div.appendChild(el("span", { "className": "event-label", "innerText": this.config.multiDayEndingTimeSeparator + formatEventTime(e.endDate) }));
           }
 
